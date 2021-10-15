@@ -27,12 +27,30 @@
 <link rel="stylesheet" href="vendor/jquery-ui.min.css">
 <link rel="stylesheet" href="vendor/font-awesome.min.css">
 <link rel="stylesheet" href="red/style.min.css">
+<link rel="stylesheet" href="vendor/grapes.min.css">
+<link href="vendor/grapesjs-preset-webpage.min.css" rel="stylesheet"/>
+<script src="vendor/grapesjs.js"></script>
+<script src="vendor/grapesjs-preset-webpage.min.js"></script>
 </head>
-<body spellcheck="false">
-<div id="red-ui-editor"></div>
-<script src="vendor/vendor.js"></script>
-<script src="red/red.min.js"></script>
-<script src="red/main.min.js"></script>
+<body spellcheck="false" style="margin:0">
+  <div id="html-editor"></div>
+  <script type="text/javascript">
+    var editor = grapesjs.init({
+        container : '#html-editor',
+        components: '<div>Hello world!</div>',
+        height:"300px",
+        plugins: ['gjs-preset-webpage'],
+        pluginsOpts: {
+          'gjs-preset-webpage': {
+            // options
+          }
+        }
+    });
+  </script>
 
+  <div id="red-ui-editor" style="top:300px"></div>
+  <script src="vendor/vendor.js"></script>
+  <script src="red/red.min.js"></script>
+  <script src="red/main.min.js"></script>
 </body>
 </html>
