@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<!--
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <!--
   Copyright JS Foundation and other contributors, http://js.foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,18 +22,20 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<title>Node-RED</title>
-<link rel="icon" type="image/png" href="favicon.ico">
-<link rel="mask-icon" href="red&#x2F;images&#x2F;node-red-icon-black.svg" color="#8f0000">
-<link rel="stylesheet" href="vendor/jquery-ui.min.css">
-<link rel="stylesheet" href="vendor/font-awesome.min.css">
-<link rel="stylesheet" href="red/style.min.css">
-<link rel="stylesheet" href="vendor/grapes.min.css">
-<link href="vendor/grapesjs-preset-webpage.min.css" rel="stylesheet"/>
-<script src="vendor/grapesjs.js"></script>
-<script src="vendor/grapesjs-preset-webpage.min.js"></script>
-<link href="vendor/grapesjs-preset-webpage.min.css" rel="stylesheet"/><!---->
+  <title>Node-RED</title>
+  <link rel="icon" type="image/png" href="favicon.ico">
+  <link rel="mask-icon" href="red&#x2F;images&#x2F;node-red-icon-black.svg" color="#8f0000">
+  <link rel="stylesheet" href="vendor/jquery-ui.min.css">
+  <link rel="stylesheet" href="vendor/font-awesome.min.css">
+  <link rel="stylesheet" href="red/style.min.css">
+  <link rel="stylesheet" href="vendor/grapes.min.css">
+  <link href="vendor/grapesjs-preset-webpage.min.css" rel="stylesheet" />
+  <script src="vendor/grapesjs.js"></script>
+  <script src="vendor/grapesjs-preset-webpage.min.js"></script>
+  <link href="vendor/grapesjs-preset-webpage.min.css" rel="stylesheet" />
+  <!---->
 </head>
+
 <body spellcheck="false" style="margin:0">
   <div id="html-editor"></div>
   <script type="text/javascript">
@@ -52,144 +55,146 @@
             attributes: { // Default attributes
               placeholder: 'Insert text here',
             },
-            content:"click",
+            content: "click",
             traits: [
-              'name',
-              'title',
-              'onClick',
-                {type:"red-node"},
+              'id',
+              'text',
+              { name:"node", type: "red-node-listener" },
+              // { name:"node", type: "red-node-template" },
               //{ type: 'checkbox', name: 'required' },
             ],
           }
         }
       });
     }
-    var editor = grapesjs.init({
-        container : '#html-editor',
-        components: '<div>Hello world!</div>',
-        height:"300px",
-         plugins: [REDGrapes,'gjs-preset-webpage'],
-         pluginsOpts: {
-           'gjs-preset-webpage': {
-             // options
-           }
-         }
+    var grapes_editor = grapesjs.init({
+      container: '#html-editor',
+      components: '<div>Hello world!</div>',
+      height: "300px",
+      plugins: [REDGrapes, 'gjs-preset-webpage'],
+      pluginsOpts: {
+        'gjs-preset-webpage': {
+          // options
+        }
+      }
     });
-      
-    editor.TraitManager.addType('red-node', {
-      templateInput: function(trait){
-          console.log({trait})
-          $(".gjs-pn-panel.gjs-pn-views-container .custom-node-wrapper").ready(function(){
-              $(".gjs-label-wrp").hide();
-              
-              var o = "inject"
-              var i = {
-                  paletteLabel: "inject",
-                  align: "right",
-                  inputs:0,
-                  outputs:1
-              }
-            function k(e) {
-                return $(".red-ui-palette-node[data-palette-type='" + e + "']");
-            }
-              
-                    var u,
-                        f,
-                        h,
-                        g,
-                        c,
-                        p,
-                        v,
-                        b,
-                        m,
-                        y = $("#red-ui-workspace-chart"),
-                        w = $("#red-ui-workspace-chart>svg").get(0);
-                    
-              $(this).find(".red-ui-palette-node").draggable({
-                        helper: "clone",
-                        appendTo: "#red-ui-editor",
-                        revert: "invalid",
-                        revertDuration: 200,
-                        containment: "#red-ui-main-container",
-                        start: function () {
-                            (b = $("#red-ui-palette").width()),
-                                (m = $("#red-ui-palette").parent().position().top + $("#red-ui-palette-container").position().top),
-                                (v = null),
-                                (p = RED.view.getActiveGroup()) && document.getElementById("group_select_" + p.id).classList.add("red-ui-flow-group-active-hovered"),
-                                RED.view.focus();
-                        },
-                        stop: function () {
-                            d3.select(".red-ui-flow-link-splice").classed("red-ui-flow-link-splice", !1),
-                                v && document.getElementById("group_select_" + v.id).classList.remove("red-ui-flow-group-hovered"),
-                                p && document.getElementById("group_select_" + p.id).classList.remove("red-ui-flow-group-active-hovered"),
-                                g && (clearTimeout(g), (g = null)),
-                                c && (clearTimeout(c), (c = null));
-                        },
-                        drag: function (e, p) {
-                            var t = k(o);
-                            (p.originalPosition.left = t.offset().left),
-                                (f = p.position.left - b + p.helper.width() / 2 + y.scrollLeft()),
-                                (h = p.position.top - m + p.helper.height() / 2 + y.scrollTop() + 10),
-                                (c =
-                                    c ||
-                                    setTimeout(function () {
-                                        var e = f / RED.view.scale(),
-                                            t = h / RED.view.scale(),
-                                            t = RED.view.getGroupAtPoint(e, t);
-                                        t !== v &&
-                                            (v && document.getElementById("group_select_" + v.id).classList.remove("red-ui-flow-group-hovered"),
-                                            t && document.getElementById("group_select_" + t.id).classList.add("red-ui-flow-group-hovered"),
-                                            (v = t) ? $(p.helper).data("group", v) : $(p.helper).removeData("group")),
-                                            (c = null);
-                                    }, 200)),
-                                0 < i.inputs &&
-                                    0 < i.outputs &&
-                                    (g =
-                                        g ||
-                                        setTimeout(function () {
-                                            for (
-                                                var e,
-                                                    t = [],
-                                                    o = 1 / 0,
-                                                    i = null,
-                                                    t = w.getIntersectionList ? (((e = w.createSVGRect()).x = f), (e.y = h), (e.width = 1), (e.height = 1), w.getIntersectionList(e, w)) : RED.view.getLinksAtPoint(f, h),
-                                                    n = f / RED.view.scale(),
-                                                    a = h / RED.view.scale(),
-                                                    r = 0;
-                                                r < t.length;
-                                                r++
-                                            ) {
-                                                var s = d3.select(t[r]);
-                                                if (s.classed("red-ui-flow-link-background") && !s.classed("red-ui-flow-link-link"))
-                                                    for (var d = t[r].getTotalLength(), l = 0; l < d; l += 10) {
-                                                        var c = t[r].getPointAtLength(l),
-                                                            c = (c.x - n) * (c.x - n) + (c.y - a) * (c.y - a);
-                                                        c < 200 && c < o && ((o = c), (i = t[r]));
-                                                    }
-                                            }
-                                            u && u !== i && d3.select(u.parentNode).classed("red-ui-flow-link-splice", !1),
-                                                i ? d3.select(i.parentNode).classed("red-ui-flow-link-splice", !0) : d3.select(".red-ui-flow-link-splice").classed("red-ui-flow-link-splice", !1),
-                                                u !== i && (i ? $(p.helper).data("splice", d3.select(i).data()[0]) : $(p.helper).removeData("splice")),
-                                                (u = i),
-                                                (g = null);
-                                        }, 200));
-                        },
-                    });//draggable({
-//                      start: function(){
-//                        $(".gjs-pn-panel.gjs-pn-views-container .custom-node-wrapper").append($clone);
-//                      }
-                  //});
-              //})
-//              $(this).find(".red-ui-palette-node").draggable()
+
+    grapes_editor.TraitManager.addType('red-node-template', redNodeTemplate());
+    grapes_editor.TraitManager.addType('red-node-listener', redNodeTemplate());
+
+    // editor.TraitManager.addType('red-node-listener', redNodeTemplate());
+    function redNodeTemplate() {
+      var out = {
+      templateInput: function (inp) {
+        console.log({ inp });
+        var nodeType = inp.trait.attributes.type.match(/red-node-(.*)/)[1]
+        $(".gjs-pn-panel.gjs-pn-views-container .custom-node-wrapper").ready(function () {
+          // $(this).find(".gjs-label-wrp").hide();
+
+          var o = nodeType;
+          var i = {
+            paletteLabel: nodeType,
+            // align: "right",
+            // inputs: 0,
+            // outputs: 1
+          }
+          function k(e) {
+            return $(".red-ui-palette-node[data-palette-type='" + e + "']");
+          }
+
+          var u,
+            f,
+            h,
+            g,
+            c,
+            p,
+            v,
+            b,
+            m,
+            y = $("#red-ui-workspace-chart"),
+            w = $("#red-ui-workspace-chart>svg").get(0);
+
+          $(this).find(".red-ui-palette-node").draggable({
+            helper: "clone",
+            appendTo: "#red-ui-editor",
+            revert: "invalid",
+            revertDuration: 200,
+            containment: "#red-ui-main-container",
+            start: function () {
+              (b = $("#red-ui-palette").width()),
+                (m = $("#red-ui-palette").parent().position().top + $("#red-ui-palette-container").position().top),
+                (v = null),
+                (p = RED.view.getActiveGroup()) && document.getElementById("group_select_" + p.id).classList.add("red-ui-flow-group-active-hovered"),
+                RED.view.focus();
+            },
+            stop: function () {
+              d3.select(".red-ui-flow-link-splice").classed("red-ui-flow-link-splice", !1),
+                v && document.getElementById("group_select_" + v.id).classList.remove("red-ui-flow-group-hovered"),
+                p && document.getElementById("group_select_" + p.id).classList.remove("red-ui-flow-group-active-hovered"),
+                g && (clearTimeout(g), (g = null)),
+                c && (clearTimeout(c), (c = null));
+            },
+            drag: function (e, p) {
+              var t = k(o);
+              (p.originalPosition.left = t.offset().left),
+                (f = p.position.left - b + p.helper.width() / 2 + y.scrollLeft()),
+                (h = p.position.top - m + p.helper.height() / 2 + y.scrollTop() + 10),
+                (c =
+                  c ||
+                  setTimeout(function () {
+                    var e = f / RED.view.scale(),
+                      t = h / RED.view.scale(),
+                      t = RED.view.getGroupAtPoint(e, t);
+                    t !== v &&
+                      (v && document.getElementById("group_select_" + v.id).classList.remove("red-ui-flow-group-hovered"),
+                        t && document.getElementById("group_select_" + t.id).classList.add("red-ui-flow-group-hovered"),
+                        (v = t) ? $(p.helper).data("group", v) : $(p.helper).removeData("group")),
+                      (c = null);
+                  }, 200)),
+                0 < i.inputs &&
+                0 < i.outputs &&
+                (g =
+                  g ||
+                  setTimeout(function () {
+                    for (
+                      var e,
+                      t = [],
+                      o = 1 / 0,
+                      i = null,
+                      t = w.getIntersectionList ? (((e = w.createSVGRect()).x = f), (e.y = h), (e.width = 1), (e.height = 1), w.getIntersectionList(e, w)) : RED.view.getLinksAtPoint(f, h),
+                      n = f / RED.view.scale(),
+                      a = h / RED.view.scale(),
+                      r = 0;
+                      r < t.length;
+                      r++
+                    ) {
+                      var s = d3.select(t[r]);
+                      if (s.classed("red-ui-flow-link-background") && !s.classed("red-ui-flow-link-link"))
+                        for (var d = t[r].getTotalLength(), l = 0; l < d; l += 10) {
+                          var c = t[r].getPointAtLength(l),
+                            c = (c.x - n) * (c.x - n) + (c.y - a) * (c.y - a);
+                          c < 200 && c < o && ((o = c), (i = t[r]));
+                        }
+                    }
+                    u && u !== i && d3.select(u.parentNode).classed("red-ui-flow-link-splice", !1),
+                      i ? d3.select(i.parentNode).classed("red-ui-flow-link-splice", !0) : d3.select(".red-ui-flow-link-splice").classed("red-ui-flow-link-splice", !1),
+                      u !== i && (i ? $(p.helper).data("splice", d3.select(i).data()[0]) : $(p.helper).removeData("splice")),
+                      (u = i),
+                      (g = null);
+                  }, 200));
+            },
           });
-          return `<div class="custom-node-wrapper">`
-            + $("<div>").append($("#red-ui-palette-container [data-palette-type='inject']").clone()).html() +  
+        });
+        var $nodeTemp = $(`#red-ui-palette-container [data-palette-type='${nodeType}']`).clone();
+        return `<div class="custom-node-wrapper">`
+          + $("<div>").append($nodeTemp).html() +
           `<div data-input style="display:none;"></div>
           </div>`;
       }
-    });
-      
-    var blockManager = editor.BlockManager;
+    }
+      return out;
+    }
+    var blockManager = grapes_editor.BlockManager;
     // blockManager.add('h1-block', {
     //   label: 'H1',
     //   content: '<h1>Put your title here</h1>',
@@ -199,26 +204,23 @@
     //   }
     // });
     blockManager.add('div-block', {
-        draggable:"*",        droppable:"*",
-
+      //        draggable:"*", 
+      droppable: "*",
       label: 'DIV',
       content: '<div>DIV</div>',
       category: 'Basic',
       attributes: {
         title: 'Insert div'
-      },
-        traits:[
-            {type:"red-node"}
-        ]
+      }
     });
-//    blockManager.add('span-block', {
-//      label: 'SPAN',
-//      content: '<span></span>',
-//      category: 'Basic',
-//      attributes: {
-//        title: 'Insert span'
-//      }
-//    });
+    //    blockManager.add('span-block', {
+    //      label: 'SPAN',
+    //      content: '<span></span>',
+    //      category: 'Basic',
+    //      attributes: {
+    //        title: 'Insert span'
+    //      }
+    //    });
     blockManager.add('button-block', {
       label: 'BUTTON',
       content: { type: 'my-button-type' },
@@ -227,63 +229,63 @@
         title: 'Insert button'
       }
     });
-  //   editor.TraitManager.addType('onClick', {
-  // // Completely remove the wrapper
-  // templateInput: '',
-  // // Use a new one, by specifying with `data-input` attribute where to place the input container
-  // templateInput: `<div class="custom-input-wrapper">
-  //   Before input
-  //   <div data-input></div>
-  //   After input
-  // </div>`
-  //   });
-      
-      
-      
-//https://github.com/artf/grapesjs/issues/324
-// ----- this allows for the manual HTML editor
-      //----------------------------------------
-      var pfx = editor.getConfig().stylePrefix;
-var modal = editor.Modal;
-var cmdm = editor.Commands;
-var codeViewer = editor.CodeManager.getViewer('CodeMirror').clone();
-var pnm = editor.Panels;
-var container = document.createElement('div');
-var btnEdit = document.createElement('button');
+    //   editor.TraitManager.addType('onClick', {
+    // // Completely remove the wrapper
+    // templateInput: '',
+    // // Use a new one, by specifying with `data-input` attribute where to place the input container
+    // templateInput: `<div class="custom-input-wrapper">
+    //   Before input
+    //   <div data-input></div>
+    //   After input
+    // </div>`
+    //   });
 
-codeViewer.set({
-    codeName: 'htmlmixed',
-    readOnly: 0,
-    theme: 'hopscotch',
-    autoBeautify: true,
-    autoCloseTags: true,
-    autoCloseBrackets: true,
-    lineWrapping: true,
-    styleActiveLine: true,
-    smartIndent: true,
-    indentWithTabs: true
-});
 
-btnEdit.innerHTML = 'Edit';
-btnEdit.className = pfx + 'btn-prim ' + pfx + 'btn-import';
-btnEdit.onclick = function() {
-    var code = codeViewer.editor.getValue();
-    editor.DomComponents.getWrapper().set('content', '');
-    editor.setComponents(code.trim());
-    modal.close();
-};
 
-cmdm.add('html-edit', {
-    run: function(editor, sender) {
+    //https://github.com/artf/grapesjs/issues/324
+    // ----- this allows for the manual HTML editor
+    //----------------------------------------
+    var pfx = grapes_editor.getConfig().stylePrefix;
+    var modal = grapes_editor.Modal;
+    var cmdm = grapes_editor.Commands;
+    var codeViewer = grapes_editor.CodeManager.getViewer('CodeMirror').clone();
+    var pnm = grapes_editor.Panels;
+    var container = document.createElement('div');
+    var btnEdit = document.createElement('button');
+
+    codeViewer.set({
+      codeName: 'htmlmixed',
+      readOnly: 0,
+      theme: 'hopscotch',
+      autoBeautify: true,
+      autoCloseTags: true,
+      autoCloseBrackets: true,
+      lineWrapping: true,
+      styleActiveLine: true,
+      smartIndent: true,
+      indentWithTabs: true
+    });
+
+    btnEdit.innerHTML = 'Edit';
+    btnEdit.className = pfx + 'btn-prim ' + pfx + 'btn-import';
+    btnEdit.onclick = function () {
+      var code = codeViewer.editor.getValue();
+      grapes_editor.DomComponents.getWrapper().set('content', '');
+      grapes_editor.setComponents(code.trim());
+      modal.close();
+    };
+
+    cmdm.add('html-edit', {
+      run: function (editor, sender) {
         sender && sender.set('active', 0);
         var viewer = codeViewer.editor;
         modal.setTitle('Edit code');
         if (!viewer) {
-            var txtarea = document.createElement('textarea');
-            container.appendChild(txtarea);
-            container.appendChild(btnEdit);
-            codeViewer.init(txtarea);
-            viewer = codeViewer.editor;
+          var txtarea = document.createElement('textarea');
+          container.appendChild(txtarea);
+          container.appendChild(btnEdit);
+          codeViewer.init(txtarea);
+          viewer = codeViewer.editor;
         }
         var InnerHtml = editor.getHtml();
         var Css = editor.getCss();
@@ -292,92 +294,152 @@ cmdm.add('html-edit', {
         codeViewer.setContent(InnerHtml + "<style>" + Css + '</style>');
         modal.open();
         viewer.refresh();
-    }
-});
+      }
+    });
 
-pnm.addButton('options',
-    [
+    pnm.addButton('options',
+      [
         {
-            id: 'edit',
-            className: 'fa fa-edit',
-            command: 'html-edit',
-            attributes: {
-                title: 'Edit'
-            }
+          id: 'edit',
+          className: 'fa fa-edit',
+          command: 'html-edit',
+          attributes: {
+            title: 'Edit'
+          }
         }
-    ]
-);
+      ]
+    );
 
-      
+
      // }//context bracket
   </script>
-<style type="text/css">
-    #divider{
-        margin:auto;
-        background:#AAA;
-        border:2px dotted #444;
-        cursor: row-resize;
-        display:inline-block;
-        width:50px;
-        height:20px;
-        margin-top:8px;
-        margin-left:15px;
+  <style type="text/css">
+    #divider {
+      margin: auto;
+      background: #888;
+      border: 1px solid #444;
+      /* cursor: row-resize; */
+      cursor:grab;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+      margin-top: 8px;
+      margin-left: 15px;
     }
-/*
+
+    #divider span{
+      height:1px;
+      width:40px;
+      margin:5px;
+      display:block;
+      background:#555;
+    }
+
+    /*
     .custom-node-wrapper{
         height:30px;
         background:red;
     }
 */
-    .gjs-blocks-c div[title="1 Column"]{        display:none;    }
-    .gjs-blocks-c div[title="2 Columns"]{        display:none;    }
-    .gjs-blocks-c div[title="3 Columns"]{        display:none;    }
-    .gjs-blocks-c div[title="2 Columns 3/7"]{        display:none;    }
-    .gjs-blocks-c div[title="Video"]{        display:none;    }
-    .gjs-blocks-c div[title="Link Block"]{        display:none;    }
-/*    .gjs-blocks-c div[title=""]{        display:none;    }*/
+    .gjs-blocks-c div[title="1 Column"] {
+      display: none;
+    }
 
-</style>
-<div id="divider" style="">
-    
-</div>
-    <div id="red-ui-editor" style="top:300px"></div>
+    .gjs-blocks-c div[title="2 Columns"] {
+      display: none;
+    }
+
+    .gjs-blocks-c div[title="3 Columns"] {
+      display: none;
+    }
+
+    .gjs-blocks-c div[title="2 Columns 3/7"] {
+      display: none;
+    }
+
+    .gjs-blocks-c div[title="Video"] {
+      display: none;
+    }
+
+    .gjs-blocks-c div[title="Link Block"] {
+      display: none;
+    }
+
+    .gjs-blocks-c div[title="Map"] {
+      display: none;
+    }
+
+    /*    .gjs-blocks-c div[title=""]{        display:none;    }*/
+
+
+    .gjs-trt-trait__wrp-node .gjs-label-wrp{
+      display:none;
+    }
+
+    /* Let's highlight canvas boundaries */
+    #gjs-mini {
+      border: 3px solid #444;
+    }
+
+    /* Reset some default styling */
+    #gjs-mini .gjs-cv-canvas {
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+  <div id="divider">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <div id="red-ui-editor" style="top:300px"></div>
   <script src="vendor/vendor.js"></script>
   <script src="red/red.min.js"></script>
   <script src="red/main.min.js"></script>
-    <script type="text/javascript">{
-        $("#divider").on("mousedown",(e)=>{
-            $("#divider").addClass("resizing");
-        });
-        $("#divider").on("mouseup mouseout",()=>{
-            $("#divider").removeClass("resizing");
-        })
-        $("#divider").on("mousemove",(event)=>{
-            var offset = $("#divider").height()/2;
-            var Y = event.pageY-offset-8;
-            console.log(event.pageY)
-            if(!$("#divider").hasClass("resizing")) return false;
-              $("#html-editor").css({height:Y});
-              $("#red-ui-editor").css({top:Y});
-        });
+  <script type="text/javascript">{
+      // $("#divider").on("mousedown", (e) => {
+      //   $("#divider").addClass("resizing");
+      // });
+      // $("#divider").on("mouseup mouseout", () => {
+      //   $("#divider").removeClass("resizing");
+      // })
+      // $("#divider").on("mousemove", (event) => {
+      //   var offset = $("#divider").height() / 2;
+      //   var Y = event.pageY - offset - 8;
+      //   console.log(event.pageY)
+      //   if (!$("#divider").hasClass("resizing")) return false;
+      //   $("#html-editor").css({ height: Y });
+      //   $("#red-ui-editor").css({ top: Y });
+      // });
 
-//        $("#divider").draggable({
-//            axis:"y",
-//            drag: function(event, ui) {
-//              //ui.helper.addClass('active');
-//                console.log(event.pageY);
-//              $("#html-editor").css({height:event.pageY});
-//              $("#red-ui-editor").css({top:event.pageY});
-//            },
-//              start: function(event, ui) {
-//                //ui.helper.addClass('active');
-//                  console.log("start drag")
-//              },
-//              stop: function(event, ui) {
-//                //ui.helper.removeClass('active');
-//                        console.log("stop drag")
-//              }
-//        });
-        }</script>
+        $("#red-ui-editor").draggable({
+          axis:"y",
+          handle:"#divider",
+          drag: function(event, ui){
+            var pos = $("#red-ui-editor").css("top");
+            $("#html-editor").css({ height:  pos});
+          }
+        })
+
+      //        $("#divider").draggable({
+      //            axis:"y",
+      //            drag: function(event, ui) {
+      //              //ui.helper.addClass('active');
+      //                console.log(event.pageY);
+      //              $("#html-editor").css({height:event.pageY});
+      //              $("#red-ui-editor").css({top:event.pageY});
+      //            },
+      //              start: function(event, ui) {
+      //                //ui.helper.addClass('active');
+      //                  console.log("start drag")
+      //              },
+      //              stop: function(event, ui) {
+      //                //ui.helper.removeClass('active');
+      //                        console.log("stop drag")
+      //              }
+      //        });
+    }</script>
 </body>
+
 </html>
