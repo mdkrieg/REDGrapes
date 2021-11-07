@@ -4163,7 +4163,6 @@
       See the License for the specific language governing permissions and
       limitations under the License.
     -->
-    
     <script type="text/html" data-help-name="change">
         <p>Set, change, delete or move properties of a message, flow context or global context.</p>
         <p>The node can specify multiple rules that will be applied in the order they are defined.</p>
@@ -4442,6 +4441,405 @@
     </script>
     
     </div>
+    <!-- CUSTOM NODE, Grapes HTML template, copied from [red-module:node-red/template] --- -->
+    
+    <style type="text/css">
+        #gjs-mini .gjs-pn-devices-c{
+            display:none
+        }
+    </style>
+    <script type="text/html" data-template-name="grapes-template">
+        <div class="form-row">
+            <label for="node-input-name">
+    <i class="fa fa-tag">
+    </i> <span data-i18n="common.label.name">
+    </span>
+    </label>
+            <div style="display: inline-block; width: calc(100% - 105px)">
+    <input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
+    </div>
+        </div>
+        <div class="form-row">
+            <label for="node-input-field">
+    <i class="fa fa-ellipsis-h">
+    </i> <span data-i18n="template.label.property">
+    </span>
+    </label>
+            <input type="text" id="node-input-field" placeholder="payload" style="width:250px;">
+            <input type="hidden" id="node-input-fieldType">
+        </div>
+
+        <div class="form-row" style="position: relative; margin-bottom: 8px;">
+            <div id="gjs-mini" style="min-height:300px;border:1px solid red;"></div>
+        </div>
+<!--
+        <div class="form-row" style="position: relative; margin-bottom: 0px;">
+            <label for="node-input-template">
+    <i class="fa fa-file-code-o">
+    </i> <span data-i18n="template.label.template">
+    </span>
+    </label>
+            <input type="hidden" id="node-input-template" autofocus="autofocus">
+            <div style="position: absolute; right:0;display:inline-block; text-align: right; font-size: 0.8em;">
+                <span data-i18n="template.label.format">
+    </span>:
+                <select id="node-input-format" style="width:110px; font-size: 10px !important;  height: 24px; padding:0;">
+                    <option value="handlebars">mustache</option>
+                    <option value="html">HTML</option>
+                    <option value="json">JSON</option>
+                    <option value="javascript">Javascript</option>
+                    <option value="css">CSS</option>
+                    <option value="markdown">Markdown</option>
+                    <option value="python">Python</option>
+                    <option value="sql">SQL</option>
+                    <option value="yaml">YAML</option>
+                    <option value="text" data-i18n="template.label.none">
+    </option>
+                </select>
+                <button id="node-template-expand-editor" class="red-ui-button red-ui-button-small">
+    <i class="fa fa-expand">
+    </i>
+    </button>
+            </div>
+        </div>
+        <div class="form-row node-text-editor-row">
+            <div style="height: 250px; min-height:150px;" class="node-text-editor" id="node-input-template-editor" >
+    </div>
+        </div>
+-->
+        <div class="form-row">
+            <label for="node-input-syntax">
+    <i class="fa fa-code">
+    </i> <span data-i18n="template.label.syntax">
+    </span>
+    </label>
+            <select id="node-input-syntax" style="width:180px;">
+                <option value="mustache" data-i18n="template.label.mustache">
+    </option>
+                <option value="plain" data-i18n="template.label.plain">
+    </option>
+            </select>
+        </div>
+<!--
+        <div class="form-row">
+            <label for="node-input-output">
+    <i class="fa fa-long-arrow-right">
+    </i> <span data-i18n="template.label.output">
+    </span>
+    </label>
+            <select id="node-input-output" style="width:180px;">
+                <option value="str" data-i18n="template.label.plain">
+    </option>
+                <option value="json" data-i18n="template.label.json">
+    </option>
+                <option value="yaml" data-i18n="template.label.yaml">
+    </option>
+            </select>
+        </div>
+-->
+    
+    </script>
+    
+    <script type="text/javascript">
+        RED.nodes.registerType('grapes-template',{
+            color:"rgb(243, 181, 103)",
+            category: 'function',
+            defaults: {
+                name: {value:""},
+                field: {value:"payload", validate:RED.validators.typedInput("fieldType")},
+                fieldType: {value:"msg"},
+                format: {value:"handlebars"},
+                syntax: {value:"mustache"},
+                template: {value:"This is the payload: {{payload}} !"},
+                output: {value:"str"}
+            },
+            inputs:1,
+            outputs:1,
+            icon: "template.svg",
+            label: function() {
+                return this.name||this._("template.template");;
+            },
+            labelStyle: function() {
+                return this.name?"node_label_italic":"";
+            },
+            oneditprepare: function() {
+                var that = this;
+                if (!this.field) {
+                    this.field = 'payload';
+                    $("#node-input-field").val("payload");
+                }
+                if (!this.fieldType) {
+                    this.fieldType = 'msg';
+                }
+                if (!this.syntax) {
+                    this.syntax = 'mustache';
+                    $("#node-input-syntax").val(this.syntax);
+                }
+                $("#node-input-field").typedInput({
+                    default: 'msg',
+                    types: ['msg','flow','global'],
+                    typeField: $("#node-input-fieldType")
+                });
+    
+                this.editor = RED.editor.createEditor({
+                    id: 'node-input-template-editor',
+                    mode: 'ace/mode/html',
+                    value: $("#node-input-template").val()
+                });
+                RED.library.create({
+                    url:"templates", // where to get the data from
+                    type:"template", // the type of object the library is for
+                    editor:that.editor, // the field name the main text body goes to
+                    fields:['name','format','output','syntax'],
+                    ext: "txt"
+                });
+                showMiniEditor();
+                this.editor.focus();
+    
+                $("#node-input-format").on("change", function() {
+                    var mod = "ace/mode/"+$("#node-input-format").val();
+                    that.editor.getSession().setMode({
+                        path: mod,
+                        v: Date.now()
+                    });
+                });
+                RED.popover.tooltip($("#node-template-expand-editor"), RED._("node-red:common.label.expand"));
+                $("#node-template-expand-editor").on("click", function(e) {
+                    e.preventDefault();
+                    var value = that.editor.getValue();
+                    RED.editor.editText({
+                        mode: $("#node-input-format").val(),
+                        value: value,
+                        width: "Infinity",
+                        cursor: that.editor.getCursorPosition(),
+                        complete: function(v,cursor) {
+                            that.editor.setValue(v, -1);
+                            that.editor.gotoLine(cursor.row+1,cursor.column,false);
+                            setTimeout(function() {
+                                that.editor.focus();
+                            },300);
+                        }
+                    })
+                })
+            },
+            oneditsave: function() {
+                $("#node-input-template").val(this.editor.getValue());
+                this.editor.destroy();
+                delete this.editor;
+            },
+            oneditcancel: function() {
+                this.editor.destroy();
+                delete this.editor;
+            },
+            oneditresize: function(size) {
+                var rows = $("#dialog-form>div:not(.node-text-editor-row)");
+                var height = $("#dialog-form").height();
+                for (var i=0; i<rows.length; i++) {
+                    height -= $(rows[i]).outerHeight(true);
+                }
+                var editorRow = $("#dialog-form>div.node-text-editor-row");
+                height -= (parseInt(editorRow.css("marginTop"))+parseInt(editorRow.css("marginBottom")));
+                $(".node-text-editor").css("height",height+"px");
+                this.editor.resize();
+            }
+        });
+        
+        // begin GrapesJS mini-editor code
+ function showMiniEditor(){
+        console.log("foo")
+     
+    var editormini = grapesjs.init({
+        container : '#gjs-mini',
+        components: '<div>Hello world!</div>',
+        height:"300px",
+         plugins: [REDGrapes],
+        // pluginsOpts: {
+        //   'gjs-preset-webpage': {
+        //     // options
+        //   }
+        // }
+    });
+    var blockManager = editormini.BlockManager;
+    // blockManager.add('h1-block', {
+    //   label: 'H1',
+    //   content: '<h1>Put your title here</h1>',
+    //   category: 'Basic',
+    //   attributes: {
+    //     title: 'Insert h1'
+    //   }
+    // });
+    blockManager.add('div-block', {
+      label: 'DIV',
+      content: '<div></div>',
+      category: 'Basic',
+      attributes: {
+        title: 'Insert div'
+      }
+    });
+    blockManager.add('span-block', {
+      label: 'SPAN',
+      content: '<span></span>',
+      category: 'Basic',
+      attributes: {
+        title: 'Insert span'
+      }
+    });
+    blockManager.add('button-block', {
+      label: 'BUTTON',
+      content: { type: 'my-button-type' },
+      category: 'Interactive',
+      attributes: {
+        title: 'Insert button'
+      }
+    });
+  //   editor.TraitManager.addType('onClick', {
+  // // Completely remove the wrapper
+  // templateInput: '',
+  // // Use a new one, by specifying with `data-input` attribute where to place the input container
+  // templateInput: `<div class="custom-input-wrapper">
+  //   Before input
+  //   <div data-input></div>
+  //   After input
+  // </div>`
+  //   });
+      
+      
+      
+    //https://github.com/artf/grapesjs/issues/324
+    // ----- this allows for the manual HTML editor
+//    var pfx = editormini.getConfig().stylePrefix;
+//    var modal = editormini.Modal;
+//    var cmdm = editormini.Commands;
+//    var codeViewer = editormini.CodeManager.getViewer('CodeMirror').clone();
+//    var pnm = editormini.Panels;
+//    var container = document.createElement('div');
+//    var btnEdit = document.createElement('button');
+//
+//    codeViewer.set({
+//        codeName: 'htmlmixed',
+//        readOnly: 0,
+//        theme: 'hopscotch',
+//        autoBeautify: true,
+//        autoCloseTags: true,
+//        autoCloseBrackets: true,
+//        lineWrapping: true,
+//        styleActiveLine: true,
+//        smartIndent: true,
+//        indentWithTabs: true
+//    });
+//
+//    btnEdit.innerHTML = 'Edit';
+//    btnEdit.className = pfx + 'btn-prim ' + pfx + 'btn-import';
+//    btnEdit.onclick = function() {
+//        var code = codeViewer.editor.getValue();
+//        editor.DomComponents.getWrapper().set('content', '');
+//        editor.setComponents(code.trim());
+//        modal.close();
+//    };
+//
+//    cmdm.add('html-edit', {
+//        run: function(editor, sender) {
+//            sender && sender.set('active', 0);
+//            var viewer = codeViewer.editor;
+//            modal.setTitle('Edit code');
+//            if (!viewer) {
+//                var txtarea = document.createElement('textarea');
+//                container.appendChild(txtarea);
+//                container.appendChild(btnEdit);
+//                codeViewer.init(txtarea);
+//                viewer = codeViewer.editor;
+//            }
+//            var InnerHtml = editor.getHtml();
+//            var Css = editor.getCss();
+//            modal.setContent('');
+//            modal.setContent(container);
+//            codeViewer.setContent(InnerHtml + "<style>" + Css + '</style>');
+//            modal.open();
+//            viewer.refresh();
+//        }
+//    });
+//
+//    pnm.addButton('options',
+//        [
+//            {
+//                id: 'edit',
+//                className: 'fa fa-edit',
+//                command: 'html-edit',
+//                attributes: {
+//                    title: 'Edit'
+//                }
+//            }
+//        ]
+//    );
+//
+ }
+    </script>
+    <!--
+      Copyright JS Foundation and other contributors, http://js.foundation
+    
+      Licensed under the Apache License, Version 2.0 (the "License");
+      you may not use this file except in compliance with the License.
+      You may obtain a copy of the License at
+    
+      http://www.apache.org/licenses/LICENSE-2.0
+    
+      Unless required by applicable law or agreed to in writing, software
+      distributed under the License is distributed on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+      See the License for the specific language governing permissions and
+      limitations under the License.
+    -->
+    
+    <script type="text/html" data-help-name="grapes-template">
+        <p>TODO: update this help, default from copied node below:</p>
+		<p>Sets a property based on the provided template.</p>
+        <h3>Inputs</h3>
+        <dl class="message-properties">
+            <dt>msg <span class="property-type">object</span>
+    </dt>
+            <dd>A msg object containing information to populate the template.</dd>
+            <dt class="optional">template <span class="property-type">string</span>
+    </dt>
+            <dd>A template to be populated from msg.payload. If not configured in the edit panel,
+             this can be set as a property of msg.</dd>
+        </dl>
+        <h3>Outputs</h3>
+        <dl class="message-properties">
+            <dt>msg <span class="property-type">object</span>
+    </dt>
+            <dd>a msg with a property set by populating the configured template with properties from the incoming msg.</dd>
+        </dl>
+        <h3>Details</h3>
+        <p>By default this uses the <i>
+    <a href="http://mustache.github.io/mustache.5.html" target="_blank">mustache</a>
+    </i>
+        format, but this can be switched off if required.</p>
+        <p>For example, when a template of:
+        <pre>Hello {{payload.name}}. Today is {{date}}</pre>
+        <p>receives a message containing:
+        <pre>{
+      date: "Monday",
+      payload: {
+        name: "Fred"
+      }
+    }</pre>
+        <p>The resulting property will be:
+        <pre>Hello Fred. Today is Monday</pre>
+        <p>It is possible to use a property from the flow context or global context. Just use <code>{{flow.name}}</code> or
+        <code>{{global.name}}</code>, or for persistable store <code>store</code> use <code>{{flow[store].name}}</code> or
+        <code>{{global[store].name}}</code>.
+        <p>
+    <b>Note: </b>By default, <i>mustache</i> will escape any non-alphanumeric or HTML entities in the values it substitutes.
+           To prevent this, use <code>{{{triple}}}</code> braces.</p>
+        <p>If you need to use <code>{{ }}</code> within your content, you can change the characters
+           used to mark the templated sections. For example, to use <code>[[ ]]</code>
+           instead, add the following line to the top of the template:</p>
+        <pre>{{=[[ ]]=}}</pre>
+    </script>
+    
+    </div>
+
+
     <div>
     <!-- --- [red-module:node-red/delay] --- -->
     <!--
